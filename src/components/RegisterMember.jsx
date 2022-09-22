@@ -1,5 +1,7 @@
 import { joiResolver } from '@hookform/resolvers/joi';
-import { Box, styled, Typography, useTheme } from '@mui/material';
+import { Box, MenuItem, styled, Typography, useTheme } from '@mui/material';
+import { add, sub } from 'date-fns';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -7,6 +9,8 @@ import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance';
 import { formatAxiosError } from '../helpers/error.helper';
 import registerMemberSchema from '../validations/registerMember.validation';
+import InputDate from './InputDate';
+import InputDropDown from './InputDropDown';
 import InputField from './InputField';
 import LoadingButton from './LoadingButton';
 import PasswordInputField from './PasswordInputField';
@@ -97,8 +101,8 @@ function RegisterMember() {
         >
           <InputField label="First Name" name="firstName" control={control} />
           <InputField label="Last Name" name="lastName" control={control} />
-          <InputField label="Email" name="email" control={control} />
           <InputField label="Username" name="userName" control={control} />
+          <InputField label="Email" name="email" control={control} />
           <PasswordInputField
             label="Password"
             name="password"
@@ -108,6 +112,23 @@ function RegisterMember() {
             label="Confirm Password"
             name="confirmPassword"
             control={control}
+          />
+          <InputDropDown label="Gender" name="gender" control={control}>
+            <MenuItem value="male">Male</MenuItem>
+            <MenuItem value="female">Female</MenuItem>
+          </InputDropDown>
+          <InputDropDown label="Occupation" name="occupation" control={control}>
+            <MenuItem value="student">Student</MenuItem>
+            <MenuItem value="worker">Worker</MenuItem>
+          </InputDropDown>
+          <InputDate
+            label="Date of birth"
+            name="birthDate"
+            control={control}
+            datePickerProps={{
+              disableFuture: true,
+              min: sub(dayjs, { years: 100 }),
+            }}
           />
           <InputField label="Phone Number" name="phone" control={control} />
         </Box>

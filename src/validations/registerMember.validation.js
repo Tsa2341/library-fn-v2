@@ -23,6 +23,9 @@ const registerMemberSchema = Joi.object({
     'any.only': 'Password must match',
   }),
   phone: Joi.string().required().empty(),
+  gender: Joi.string().required().empty(),
+  occupation: Joi.string().required().empty(),
+  birthDate: Joi.date().required().empty(),
 });
 
 export default registerMemberSchema;

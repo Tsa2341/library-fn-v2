@@ -1,3 +1,4 @@
+import { CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -63,6 +64,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ThemeProvider theme={theme}>
     <Provider store={store}>
+      <CssBaseline />
       <RouterProvider router={routes} />
     </Provider>
   </ThemeProvider>,
