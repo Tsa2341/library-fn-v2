@@ -2,10 +2,12 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance';
 import { formatAxiosError } from '../helpers/error.helper';
 import { getFine } from '../helpers/payment.helper';
+import { fetchMember } from '../helpers/redux.helper';
 import paymentSchema from '../validations/payment.validation';
 import BackButton from './BackButton';
 import Header from './Header';
@@ -13,6 +15,7 @@ import InputField from './InputField';
 import LoadingButton from './LoadingButton';
 
 function Payment() {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(undefined);
   const { control, handleSubmit, reset } = useForm({
@@ -23,13 +26,14 @@ function Payment() {
     setLoading(true);
     axiosInstance
       .post('/payments', { ...data, amount })
-      .then((res) => {
+      .then(async (res) => {
+        await getFine(setAmount);
+        await fetchMember(dispatch);
+        reset();
         toast.success(res.data.message);
       })
-      .catch(async (error) => {
-        await getFine(setAmount);
-        toast.success(formatAxiosError(error));
-        reset();
+      .catch((error) => {
+        toast.error(formatAxiosError(error));
       })
       .finally(() => {
         setLoading(false);

@@ -1,3 +1,7 @@
 export function formatAxiosError(error) {
-  return (error.response.data && error.response.data.message) || error.message;
+  console.log(error, 'axios error');
+  return (
+    (error.response && error.response.data && error.response.data.message) ||
+    error.message
+  );
 }

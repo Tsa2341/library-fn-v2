@@ -6,7 +6,7 @@ import { capitalizeFirstLetter } from '../helpers/word.helpers';
 import Header from './Header';
 import SearchBookInput from './SearchBookInput';
 
-function MemberShipSearch() {
+function MemberSearch() {
   const {
     palette: { color },
   } = useTheme();
@@ -25,6 +25,19 @@ function MemberShipSearch() {
       }}
     >
       <Header mb="15px">Manage Membership</Header>
+      <Stack direction="row" justifyContent="end">
+        <Button
+          color="error"
+          variant="contained"
+          onClick={() => {
+            navigate('../member/register');
+          }}
+        >
+          <Typography color="white" fontSize="0.75rem">
+            create new member
+          </Typography>
+        </Button>
+      </Stack>
       <SearchBookInput />
       <Box
         sx={{
@@ -104,4 +117,4 @@ function MemberShipSearch() {
   );
 }
 
-export default MemberShipSearch;
+export default MemberSearch;

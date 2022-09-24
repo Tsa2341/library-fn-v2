@@ -11,6 +11,6 @@ export async function getFine(onSuccess) {
       }
     })
     .catch((error) => {
-      toast.success(formatAxiosError(error));
+      toast.error(formatAxiosError(error));
     });
 }

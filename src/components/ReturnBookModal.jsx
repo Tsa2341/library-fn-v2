@@ -9,7 +9,9 @@ import {
 } from '@mui/material';
 import { Stack } from '@mui/system';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { fetchMember } from '../helpers/redux.helper';
 
 function ReturnBookModal({
   open,
@@ -21,6 +23,7 @@ function ReturnBookModal({
   sx,
   ...props
 }) {
+  const dispatch = useDispatch();
   const {
     palette: { color },
   } = useTheme();
@@ -98,6 +101,7 @@ function ReturnBookModal({
             sx={{ maxWidth: '150px', width: '100%' }}
             onClick={() => {
               navigate(-1);
+              fetchMember(dispatch);
             }}
           >
             <Typography color="white">Thank You</Typography>

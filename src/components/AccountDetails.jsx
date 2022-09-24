@@ -1,14 +1,15 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { capitalizeFirstLetter } from '../helpers/word.helpers';
 import Header from './Header';
 
 function AccountDetails() {
   const { member } = useSelector((state) => state.member);
   const type = JSON.parse(localStorage.getItem('type'));
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -36,10 +37,26 @@ function AccountDetails() {
             Last name: {capitalizeFirstLetter(member.name).split(' ')[1]}
           </Typography>
           <Typography>Username: {member.userName}</Typography>
+          {type === 'member' && (
+            <Typography>
+              Gender: {capitalizeFirstLetter(member.gender)}
+            </Typography>
+          )}
         </Stack>
         <Stack>
           <Typography>Email: {member.email}</Typography>
           <Typography>Phone: {member.phone}</Typography>
+          {type === 'member' && (
+            <>
+              <Typography>
+                Occupation: {capitalizeFirstLetter(member.occupation)}
+              </Typography>
+              <Typography>
+                Birth Date:
+                {format(new Date(member.birthDate), 'yyyy-M-d')}
+              </Typography>
+            </>
+          )}
         </Stack>
       </Box>
 
@@ -70,16 +87,16 @@ function AccountDetails() {
               </Typography>
             </Stack>
           </Box>
-          <Box sx={{ marginTop: '40px' }}>
-            <Link to="../manage-books">
-              <Typography
-                fontWeight="bold"
-                sx={{ textDecoration: 'underline' }}
-              >
-                Manage My Books
-              </Typography>
-            </Link>
-          </Box>
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ marginTop: '30px' }}
+            onClick={() => {
+              navigate('../details/edit');
+            }}
+          >
+            <Typography color="white">Update Account</Typography>
+          </Button>
         </>
       )}
     </Box>

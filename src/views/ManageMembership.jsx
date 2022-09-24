@@ -2,30 +2,14 @@ import { Box, CircularProgress } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axiosInstance from '../axiosInstance';
-import { formatAxiosError } from '../helpers/error.helper';
-import {
-  allMembersErrorAction,
-  getAllMembersAction,
-  loadingGetAllMembersAction,
-} from '../redux/slices/allMembers.slice';
+import { fetchAllMembers } from '../helpers/redux.helper';
 
 function ManageMembership() {
   const dispatch = useDispatch();
-  const { members, loadingGet } = useSelector((state) => state.allMembers);
+  const { loadingGet } = useSelector((state) => state.allMembers);
 
   useEffect(() => {
-    dispatch(loadingGetAllMembersAction());
-    axiosInstance
-      .get('/users/members/all')
-      .then((res) => {
-        dispatch(getAllMembersAction(res.data.data.members));
-      })
-      .catch((error) => {
-        dispatch(allMembersErrorAction(formatAxiosError(error)));
-        toast.error(formatAxiosError(error));
-      });
+    fetchAllMembers(dispatch);
   }, []);
 
   return loadingGet ? (

@@ -1,13 +1,22 @@
 import { joiResolver } from '@hookform/resolvers/joi';
-import { Box, MenuItem, styled, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  MenuItem,
+  Stack,
+  styled,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { sub } from 'date-fns';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance';
 import { formatAxiosError } from '../helpers/error.helper';
+import { fetchAllMembers } from '../helpers/redux.helper';
 import registerMemberSchema from '../validations/registerMember.validation';
 import InputDate from './InputDate';
 import InputDropDown from './InputDropDown';
@@ -20,12 +29,13 @@ const CustomTypography = styled(Typography)(() => ({
   lineHeight: '1.3rem',
 }));
 
-function RegisterMember() {
+function LibrarianRegisterMember() {
   const {
     palette: { color, secondary },
   } = useTheme();
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { handleSubmit, control, reset } = useForm({
     resolver: joiResolver(registerMemberSchema),
   });
@@ -34,10 +44,12 @@ function RegisterMember() {
     setLoading(true);
     delete data.confirmPassword;
     await axiosInstance
-      .post('/users/members/register', data)
-      .then((res) => {
+      .post('/users/members/register/librarian', data)
+      .then(async (res) => {
+        await fetchAllMembers(dispatch);
         reset();
         toast.success(res.data.message);
+        navigate('..');
       })
       .catch((error) => {
         toast.error(formatAxiosError(error));
@@ -151,20 +163,31 @@ function RegisterMember() {
           />
           <InputField label="Phone Number" name="phone" control={control} />
         </Box>
-        <LoadingButton loading={loading} onClick={handleSubmit(registerMember)}>
-          Sign up
-        </LoadingButton>
-        <CustomTypography
-          color={color.faintBlack}
-          fontSize="0.7rem"
-          maxWidth="300px"
+        <Stack
+          direction="row"
+          gap="10px"
+          justifyContent="space-between"
+          width="100%"
         >
-          By clicking the &quot;Sign Up&quot; button, you are creating an
-          account, and you agree to the Terms of Use.
-        </CustomTypography>
+          <LoadingButton
+            color="error"
+            onClick={() => {
+              navigate('..');
+            }}
+            disabled={loading}
+          >
+            Cancel
+          </LoadingButton>
+          <LoadingButton
+            loading={loading}
+            onClick={handleSubmit(registerMember)}
+          >
+            Sign up
+          </LoadingButton>
+        </Stack>
       </Box>
     </Box>
   );
 }
 
-export default RegisterMember;
+export default LibrarianRegisterMember;

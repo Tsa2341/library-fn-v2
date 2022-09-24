@@ -1,14 +1,14 @@
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
-import { format, isAfter, isBefore } from 'date-fns';
+import { format, isBefore } from 'date-fns';
 import React, { useState } from 'react';
+import { Chart } from 'react-google-charts';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
+import { memberCheckOutChartData } from '../helpers/createChartData';
 import { capitalizeFirstLetter } from '../helpers/word.helpers';
+import BackButton from './BackButton';
 import Header from './Header';
 import MemberShipStatusModal from './MemberShipStatusModal';
-import { Chart } from 'react-google-charts';
-import generateChartData from '../helpers/createChartData';
-import BackButton from './BackButton';
 
 const Title = ({ children, sx, ...props }) => {
   const {
@@ -38,8 +38,11 @@ function ManageMember() {
   const [status, setStatus] = useState(undefined);
 
   id = parseInt(id, 10);
-
   const member = members.filter((member) => member.id === id)[0];
+
+  if (!member) {
+    return <Navigate to=".." />;
+  }
 
   const checkOutBooks = member.check_out_members.filter((checkOut) => {
     if (!checkOut.returned_date) {
@@ -59,7 +62,7 @@ function ManageMember() {
   });
 
   const reservedBooks = member.member_reservations;
-  const data = generateChartData(members[0].check_out_members);
+  const data = memberCheckOutChartData(member.check_out_members);
 
   return (
     <>
@@ -111,10 +114,20 @@ function ManageMember() {
               Last name: {capitalizeFirstLetter(member.name).split(' ')[1]}
             </Typography>
             <Typography>Username: {member.userName}</Typography>
+            <Typography>
+              Gender: {capitalizeFirstLetter(member.gender)}
+            </Typography>
           </Stack>
           <Stack>
             <Typography>Email: {member.email}</Typography>
             <Typography>Phone: {member.phone}</Typography>
+            <Typography>
+              Occupation: {capitalizeFirstLetter(member.occupation)}
+            </Typography>
+            <Typography>
+              Birth Date:
+              {format(new Date(member.birthDate), 'yyyy-M-d')}
+            </Typography>
           </Stack>
         </Box>
         <Title>Membership Details</Title>

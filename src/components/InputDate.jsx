@@ -1,10 +1,10 @@
 import { Box, TextField, Typography, useTheme } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
 
 function InputDate({
   label,
@@ -40,7 +40,6 @@ function InputDate({
             <DatePicker
               value={value}
               onChange={(e) => {
-                console.log(e.toISOString());
                 onChange(e.toISOString());
               }}
               {...datePickerProps}

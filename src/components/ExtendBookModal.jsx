@@ -9,7 +9,9 @@ import {
 } from '@mui/material';
 import { Stack } from '@mui/system';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { fetchMember } from '../helpers/redux.helper';
 
 function ExtendBookModal({
   open,
@@ -28,6 +30,7 @@ function ExtendBookModal({
     setOpen(false);
   }
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <Modal
@@ -98,6 +101,7 @@ function ExtendBookModal({
             sx={{ maxWidth: '150px', width: '100%' }}
             onClick={() => {
               navigate(-1);
+              fetchMember(dispatch);
             }}
           >
             <Typography color="white">Thank You</Typography>

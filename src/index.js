@@ -40,22 +40,29 @@ const theme = createTheme({
   shape: {
     borderRadius: 0,
   },
+  typography: {
+    fontFamily: 'Lato, sans-serif',
+    allVariants: {
+      color: '#333333',
+      wordBreak: 'keep-all',
+    },
+    margin: 0,
+    '@media (max-width:600px)': {
+      fontSize: 14,
+    },
+  },
   components: {
     MuiIconButton: {
       styleOverrides: {
         root: { padding: 0 },
       },
     },
-  },
-  typography: {
-    fontFamily: 'Lato, sans-serif',
-    allVariants: {
-      color: '#333333',
-      wordBreak: 'break-word',
-    },
-    margin: 0,
-    '@media (max-width:600px)': {
-      fontSize: 14,
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          wordBreak: 'normal',
+        },
+      },
     },
   },
 });

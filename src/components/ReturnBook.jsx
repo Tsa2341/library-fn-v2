@@ -3,14 +3,10 @@ import { add, format } from 'date-fns';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance';
 import { formatAxiosError } from '../helpers/error.helper';
 import { capitalizeFirstLetter } from '../helpers/word.helpers';
-import {
-  getMemberAction,
-  loadingGetMemberAction,
-  memberErrorAction,
-} from '../redux/slices/member.slice';
 import BackButton from './BackButton';
 import Header from './Header';
 import LoadingButton from './LoadingButton';
@@ -40,35 +36,22 @@ function ReturnBook() {
 
   if (!checkOut) {
     if (!open) {
-      return <Navigate to="/account/manage-books" />;
+      return <Navigate to="/member/manage-books" />;
     }
   } else {
     book = checkOut.check_out_books;
     userData = JSON.parse(localStorage.getItem('userData'));
   }
 
-  async function getMember() {
-    dispatch(loadingGetMemberAction());
-    axiosInstance
-      .get(`/users/members`)
-      .then((res) => {
-        dispatch(getMemberAction(res.data.data.member));
-        setSuccess(true);
-      })
-      .catch((error) => {
-        dispatch(memberErrorAction(formatAxiosError(error)));
-        setErrorMessage(formatAxiosError(error));
-      });
-  }
-
   async function returnBook() {
     await axiosInstance
       .patch(`/books/return/${id}`, {})
-      .then((res) => {
-        getMember();
+      .then(async (res) => {
+        setSuccess(true);
         setCheckOutNumber(res.data.data.checkOut.check_out_num);
       })
       .catch((error) => {
+        toast.error(formatAxiosError(error));
         setErrorMessage(formatAxiosError(error));
       })
       .finally(() => {

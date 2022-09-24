@@ -3,15 +3,18 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import About from './components/About';
 import AccountDetails from './components/AccountDetails';
 import AddBook from './components/AddBook';
+import Analytics from './components/Analytics';
 import BookCheckOut from './components/BookCheckOut';
 import BookDetails from './components/BookDetails';
 import BookReservation from './components/BookReservation';
 import CategoryBook from './components/CategoryBook';
+import EditMember from './components/EditMember';
 import ExtendDeadline from './components/ExtendDeadline';
+import LibrarianRegisterMember from './components/LibrarianRegisterMember';
 import Logout from './components/Logout';
 import ManageBook from './components/ManageBook';
 import ManageMember from './components/ManageMember';
-import MemberShipSearch from './components/MemberShipSearch';
+import MemberSearch from './components/MemberSearch';
 import NotFound from './components/NotFound';
 import Payment from './components/Payment';
 import RegisterMember from './components/RegisterMember';
@@ -44,22 +47,43 @@ const routes = createBrowserRouter([
         path: 'member',
         element: <Member />,
         children: [
+          {
+            path: '',
+            element: <Navigate to="signIn" />,
+          },
           { path: 'register', element: <RegisterMember /> },
           { path: 'signIn', element: <SignInMember /> },
           { path: 'payment', element: <Payment /> },
+          {
+            path: 'manage-books',
+            element: <ManageBook />,
+          },
+          {
+            path: 'extend-book/:id',
+            element: <ExtendDeadline />,
+          },
+          {
+            path: 'return-book/:id',
+            element: <ReturnBook />,
+          },
         ],
       },
       {
         path: 'librarian',
         element: <Librarian />,
         children: [
+          {
+            path: '',
+            element: <Navigate to="signIn" />,
+          },
           { path: 'signIn', element: <SignInLibrarian /> },
           {
             path: 'manage',
             element: <ManageMembership />,
             children: [
               { path: '', element: <Navigate to="search" /> },
-              { path: 'search', element: <MemberShipSearch /> },
+              { path: 'search', element: <MemberSearch /> },
+              { path: 'member/register', element: <LibrarianRegisterMember /> },
               { path: 'member/:id', element: <ManageMember /> },
             ],
           },
@@ -82,6 +106,10 @@ const routes = createBrowserRouter([
             path: 'book/:id',
             element: <Book />,
             children: [
+              {
+                path: '',
+                element: <Navigate to="details" />,
+              },
               {
                 path: 'details',
                 element: <BookDetails />,
@@ -112,18 +140,14 @@ const routes = createBrowserRouter([
             element: <AccountDetails />,
           },
           {
-            path: 'manage-books',
-            element: <ManageBook />,
-          },
-          {
-            path: 'extend-book/:id',
-            element: <ExtendDeadline />,
-          },
-          {
-            path: 'return-book/:id',
-            element: <ReturnBook />,
+            path: 'details/edit',
+            element: <EditMember />,
           },
         ],
+      },
+      {
+        path: 'analytics',
+        element: <Analytics />,
       },
       {
         path: 'logout',

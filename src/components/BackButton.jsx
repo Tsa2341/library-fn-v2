@@ -7,6 +7,7 @@ function BackButton({
   color = 'black',
   direction = 'row',
   fontSize = '2rem',
+  to = -1,
   children,
   ...props
 }) {
@@ -17,7 +18,7 @@ function BackButton({
       <IconButton
         sx={{ padding: 0 }}
         onClick={() => {
-          navigate(-1);
+          navigate(to);
         }}
       >
         <ArrowCircleLeftIcon color={color} sx={{ fontSize: fontSize }} />

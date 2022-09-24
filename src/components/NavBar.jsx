@@ -50,32 +50,39 @@ function NavBar() {
 
   if (!token) {
     links = [
-      { to: '/member/signIn', text: 'sign in' },
-      { to: '/member/register', text: 'registration' },
-      { to: '/librarian/signIn', text: 'librarian sign in' },
+      { to: '/member/signIn', text: 'Sign In' },
+      { to: '/member/register', text: 'Registration' },
+      { to: '/librarian/signIn', text: 'Librarian SignIn' },
       ...links,
     ];
   }
 
   if (token) {
     links = [
-      { to: '/account', text: 'account' },
-      { to: '/logout', text: 'logout' },
+      { to: '/account', text: 'Account' },
+      { to: '/logout', text: 'Logout' },
       ...links,
     ];
 
     const type = JSON.parse(localStorage.getItem('type'));
     if (type === 'librarian') {
       links = [
-        { to: '/librarian/manage', text: 'manage membership' },
+        { to: '/librarian/manage', text: 'Manage Membership' },
+        { to: '/analytics', text: 'Library Analytics' },
+        ...links,
+      ];
+    }
+    if (type === 'member') {
+      links = [
+        { to: '/member/manage-books', text: 'Manage My Books' },
         ...links,
       ];
     }
   }
 
   links = [
-    { to: '/about', text: 'about' },
-    { to: '/catalog', text: 'catalog' },
+    { to: '/about', text: 'About' },
+    { to: '/catalog', text: 'Catalog' },
     ...links,
   ];
 
@@ -126,7 +133,7 @@ function NavBar() {
         sx={{
           padding: '50px',
           height: '100%',
-          position: 'absolute',
+          position: 'fixed',
           zIndex: '100',
           bgcolor: theme.palette.primary.dark,
           right: 0,

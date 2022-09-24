@@ -6,11 +6,6 @@ import { Navigate, useParams } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import { formatAxiosError } from '../helpers/error.helper';
 import { capitalizeFirstLetter } from '../helpers/word.helpers';
-import {
-  getMemberAction,
-  loadingGetMemberAction,
-  memberErrorAction,
-} from '../redux/slices/member.slice';
 import BackButton from './BackButton';
 import ExtendBookModal from './ExtendBookModal';
 import Header from './Header';
@@ -35,33 +30,23 @@ function ExtendDeadline() {
     return false;
   })[0];
 
+  let book;
+  let userData;
+
   if (!checkOut) {
-    return <Navigate to="/account/manage-books" />;
-  }
-
-  const book = checkOut.check_out_books;
-
-  const userData = JSON.parse(localStorage.getItem('userData'));
-
-  async function getMember() {
-    dispatch(loadingGetMemberAction());
-    axiosInstance
-      .get(`/users/members`)
-      .then((res) => {
-        dispatch(getMemberAction(res.data.data.member));
-        setSuccess(true);
-      })
-      .catch((error) => {
-        dispatch(memberErrorAction(formatAxiosError(error)));
-        setErrorMessage(formatAxiosError(error));
-      });
+    if (!open) {
+      return <Navigate to="/member/manage-books" />;
+    }
+  } else {
+    book = checkOut.check_out_books;
+    userData = JSON.parse(localStorage.getItem('userData'));
   }
 
   async function extendBook() {
     await axiosInstance
       .patch(`/books/extend/${id}`, {})
       .then((res) => {
-        getMember();
+        setSuccess(true);
         setCheckOutNumber(res.data.data.checkOut.check_out_num);
       })
       .catch((error) => {
@@ -75,59 +60,66 @@ function ExtendDeadline() {
 
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          flexFlow: 'column nowrap',
-          width: '100%',
-          py: { xs: '20px', sm: '30px' },
-          px: { xs: '30px', sm: '60px', md: '70px', lg: '80px' },
-        }}
-      >
-        <BackButton
+      {!open ? (
+        <Box
           sx={{
-            marginLeft: '-30px',
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            width: '100%',
+            py: { xs: '20px', sm: '30px' },
+            px: { xs: '30px', sm: '60px', md: '70px', lg: '80px' },
           }}
         >
-          <Typography fontSize="1rem">Back</Typography>
-        </BackButton>
-        <Header sx={{ marginBottom: '20px' }}>Extend Deadline</Header>
+          <BackButton
+            sx={{
+              marginLeft: '-30px',
+            }}
+          >
+            <Typography fontSize="1rem">Back</Typography>
+          </BackButton>
+          <Header sx={{ marginBottom: '20px' }}>Extend Deadline</Header>
 
-        <Typography mb="20px">
-          {capitalizeFirstLetter(userData.name)}:{' '}
-        </Typography>
-        <Typography>
-          Picked book:
-          {book.title}
-        </Typography>
-        <Typography>
-          Check-out date:
-          {format(new Date(checkOut.check_out_date), 'yyyy-M-d')}
-        </Typography>
-        <Typography>
-          Deadline to return:
-          {format(new Date(checkOut.deadline), 'yyyy-M-d')}
-        </Typography>
-        <Typography>
-          New deadline to return:
-          {format(add(new Date(checkOut.deadline), { days: 4 }), 'yyyy-M-d')}
-        </Typography>
-        <LoadingButton
-          loading={loading}
-          color="primary"
-          sx={{ mx: 'auto', maxWidth: '300px', my: '20px' }}
-          onClick={() => {
-            extendBook();
-            setLoading(true);
-          }}
-        >
-          <Typography color="white">Confirm Extend</Typography>
-        </LoadingButton>
-      </Box>
+          <Typography mb="20px">
+            {capitalizeFirstLetter(userData.name)}:{' '}
+          </Typography>
+          <Typography>
+            Picked book:
+            {book.title}
+          </Typography>
+          <Typography>
+            Check-out date:
+            {format(new Date(checkOut.check_out_date), 'yyyy-M-d')}
+          </Typography>
+          <Typography>
+            Deadline to return:
+            {format(new Date(checkOut.deadline), 'yyyy-M-d')}
+          </Typography>
+          <Typography>
+            New deadline to return:
+            {format(add(new Date(checkOut.deadline), { days: 4 }), 'yyyy-M-d')}
+          </Typography>
+          <LoadingButton
+            loading={loading}
+            color="primary"
+            sx={{ mx: 'auto', maxWidth: '300px', my: '20px' }}
+            onClick={() => {
+              extendBook();
+              setLoading(true);
+            }}
+          >
+            <Typography color="white">Confirm Extend</Typography>
+          </LoadingButton>
+        </Box>
+      ) : (
+        <></>
+      )}
       <ExtendBookModal
         open={open}
         setOpen={setOpen}
-        newDeadline={format(new Date(checkOut.deadline), 'yyyy-M-d')}
+        newDeadline={format(
+          add(new Date(checkOut.deadline), { days: 4 }),
+          'yyyy-M-d',
+        )}
         successfull={success}
         errorMessage={errorMessage}
         checkOutNumber={checkOutNumber}

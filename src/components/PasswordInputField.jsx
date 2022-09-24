@@ -1,3 +1,5 @@
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   IconButton,
@@ -8,8 +10,6 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 function PasswordInputField({
   label,

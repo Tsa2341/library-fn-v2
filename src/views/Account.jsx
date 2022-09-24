@@ -2,37 +2,14 @@ import { Box, CircularProgress } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axiosInstance from '../axiosInstance';
-import { formatAxiosError } from '../helpers/error.helper';
-import {
-  getMemberAction,
-  loadingGetMemberAction,
-  memberErrorAction,
-} from '../redux/slices/member.slice';
+import { fetchMember } from '../helpers/redux.helper';
 
 function Account() {
-  const type = JSON.parse(localStorage.getItem('type'));
   const dispatch = useDispatch();
   const { member } = useSelector((state) => state.member);
 
   useEffect(() => {
-    dispatch(loadingGetMemberAction());
-    axiosInstance
-      .get(type === 'member' ? '/users/members' : '/users/librarians')
-      .then((res) => {
-        let data;
-        if (type === 'member') {
-          data = res.data.data.member;
-        } else {
-          data = res.data.data.librarian;
-        }
-        dispatch(getMemberAction(data));
-      })
-      .catch((error) => {
-        dispatch(memberErrorAction(formatAxiosError(error)));
-        toast.error(formatAxiosError(error));
-      });
+    fetchMember(dispatch);
   }, []);
 
   return Object.keys(member).length === 0 ? (
