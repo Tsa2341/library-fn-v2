@@ -13,6 +13,8 @@ function Logout() {
 
   function logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('type');
+    localStorage.removeItem('userData');
     window.location.href = '/member/signIn';
   }
 
