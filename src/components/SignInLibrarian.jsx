@@ -23,6 +23,10 @@ function SignInLibrarian() {
 
   const { handleSubmit, control, reset } = useForm({
     resolver: joiResolver(signInMemberSchema),
+    defaultValues: {
+      userName: 'Librarian1@gmail.com',
+      password: 'Librarian1@gmail.com',
+    },
   });
 
   async function signInLibrarian(data) {

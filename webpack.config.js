@@ -22,7 +22,7 @@ module.exports = {
   devServer: {
     port: process.env.PORT || '4000',
     historyApiFallback: true,
-    open: true,
+    // open: true,
     hot: true,
   },
   module: {

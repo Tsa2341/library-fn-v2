@@ -24,6 +24,10 @@ function SignInMember() {
 
   const { handleSubmit, control, reset } = useForm({
     resolver: joiResolver(signInMemberSchema),
+    defaultValues: {
+      userName: 'User1@gmail.com',
+      password: 'User1@gmail.com',
+    },
   });
 
   async function signInMember(data) {
